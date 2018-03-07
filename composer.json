@@ -1,0 +1,33 @@
+{
+  "name": "timmcleod/turtlecoin-walletd-rpc-php",
+  "description": "A PHP wrapper for the TurtleCoin walletd daemon RPC interface",
+  "keywords": [
+    "TurtleCoin",
+    "PHP"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Tim McLeod",
+      "email": "tim@timmcleod.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.1.3",
+    "guzzlehttp/guzzle": "^6.2"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~7.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "TimMcLeod\\TurtleCoin\\Walletd\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "minimum-stability": "stable"
+}
