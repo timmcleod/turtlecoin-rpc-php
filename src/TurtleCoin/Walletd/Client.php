@@ -5,8 +5,8 @@ namespace TimMcLeod\TurtleCoin\Walletd;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\RequestOptions;
-use PHPUnit\Runner\Exception;
 use Psr\Http\Message\ResponseInterface;
+use stdClass;
 
 class Client
 {
@@ -24,31 +24,6 @@ class Client
 
     /** @var string */
     protected $rpcPassword = 'test';
-
-    /** @var array */
-    public static $rpcMethods = [
-        "reset",
-        "save",
-        "getViewKey",
-        "getSpendKeys",
-        "getStatus",
-        "getAddresses",
-        "createAddress",
-        "deleteAddress",
-        "getBalance",
-        "getBlockHashes",
-        "getTransactionHashes",
-        "getTransactions",
-        "getUnconfirmedTransactionHashes",
-        "getTransaction",
-        "sendTransaction",
-        "createDelayedTransaction",
-        "getDelayedTransactionHashes",
-        "deleteDelayedTransaction",
-        "sendDelayedTransaction",
-        "sendFusionTransaction",
-        "estimateFusion"
-    ];
 
     /**
      * Wrapper for TurtleCoin walletd JSON-RPC interface.
@@ -105,9 +80,8 @@ class Client
             'jsonrpc' => '2.0',
             'id'      => $this->rpcId,
             'method'  => $method,
+            'params'  => $this->prepareParams($params)
         ];
-
-        if (!empty($params)) $options['params'] = $params;
 
         if (!empty($this->rpcPassword)) $options['password'] = $this->rpcPassword;
 
@@ -116,6 +90,15 @@ class Client
         $this->rpcId++;
 
         return $response;
+    }
+
+    /**
+     * @param array $params
+     * @return array|stdClass
+     */
+    protected function prepareParams(array $params)
+    {
+        return empty($params) ? new stdClass() : $params;
     }
 
     /**
@@ -137,20 +120,6 @@ class Client
     }
 
     /**
-     * Makes a call to one of
-     *
-     * @param $method
-     * @param $args
-     * @return ResponseInterface
-     */
-    public function __call($method, $args)
-    {
-        if (!in_array($method, static::$rpcMethods)) throw new Exception("Invalid Method: [$method]");
-
-        return $this->request($method, empty($args) ? [] : $args);
-    }
-
-    /**
      * Re-syncs the wallet.
      *
      * If the $viewSecretKey parameter is not specified, the reset() method resets the wallet and
@@ -159,36 +128,72 @@ class Client
      * address for it.
      *
      * @param string|null $viewSecretKey Private view key. Optional.
+     * @return ResponseInterface
      */
-    public function reset($viewSecretKey = null) { }
+    public function reset(string $viewSecretKey = null)
+    {
+        $params = [];
+
+        if (!is_null($viewSecretKey)) $params['viewSecretKey'] = $viewSecretKey;
+
+        return $this->request('reset', $params);
+    }
 
     /**
      * Saves the wallet.
+     *
+     * @return ResponseInterface
      */
-    public function save() { }
+    public function save()
+    {
+        return $this->request('save', []);
+    }
 
     /**
      * Returns the view key.
+     *
+     * @return ResponseInterface
      */
-    public function getViewKey() { }
+    public function getViewKey()
+    {
+        return $this->request('getViewKey', []);
+    }
 
     /**
      * Returns the spend keys.
      *
      * @param string $address Valid and existing in this container address. Required.
+     * @return ResponseInterface
      */
-    public function getSpendKeys($address) { }
+    public function getSpendKeys(string $address)
+    {
+        $params = [
+            'address' => $address
+        ];
+
+        return $this->request('getSpendKeys', $params);
+    }
 
     /**
      * Returns information about the current RPC Wallet state:
      * block_count, known_block_count, last_block_hash and peer_count.
+     *
+     * @return ResponseInterface
      */
-    public function getStatus() { }
+    public function getStatus()
+    {
+        return $this->request('getStatus', []);
+    }
 
     /**
      * Returns an array of your RPC Wallet's addresses.
+     *
+     * @return ResponseInterface
      */
-    public function getAddresses() { }
+    public function getAddresses()
+    {
+        return $this->request('getAddresses', []);
+    }
 
     /**
      * Creates an additional address in your wallet.
@@ -197,48 +202,63 @@ class Client
      *                                    RPC Wallet creates spend address. Optional.
      * @param string|null $publicSpendKey Public spend key. If publicSpendKey was specified,
      *                                    RPC Wallet creates view address. Optional.
+     * @return ResponseInterface
      */
-    public function createAddress($secretSpendKey = null, $publicSpendKey = null) { }
+    public function createAddress(string $secretSpendKey = null, string $publicSpendKey = null)
+    {
+        $params = [];
+
+        if (!is_null($secretSpendKey)) $params['secretSpendKey'] = $secretSpendKey;
+        if (!is_null($publicSpendKey)) $params['publicSpendKey'] = $publicSpendKey;
+
+        return $this->request('createAddress', $params);
+    }
 
     /**
      * Deletes a specified address.
      *
      * @param string $address An address to be deleted. Required.
+     * @return ResponseInterface
      */
-    public function deleteAddress($address) { }
+    public function deleteAddress(string $address)
+    {
+        $params = [
+            'address' => $address
+        ];
+
+        return $this->request('deleteAddress', $params);
+    }
 
     /**
      * Method returns a balance for a specified address.
      *
      * @param string|null $address Valid and existing address in this wallet. Optional.
+     * @return ResponseInterface
      */
-    public function getBalance($address = null) { }
+    public function getBalance(string $address = null)
+    {
+        $params = [];
+
+        if (!is_null($address)) $params['address'] = $address;
+
+        return $this->request('getBalance', $params);
+    }
 
     /**
      * Returns an array of block hashes for a specified block range.
      *
      * @param integer $firstBlockIndex Starting height. Required.
      * @param integer $blockCount      Number of blocks to process. Required.
+     * @return ResponseInterface
      */
-    public function getBlockHashes($firstBlockIndex, $blockCount) { }
+    public function getBlockHashes(int $firstBlockIndex, int $blockCount)
+    {
+        $params = [
+            'firstBlockIndex' => $firstBlockIndex,
+            'blockCount'      => $blockCount,
+        ];
 
-    /**
-     * Returns an array of block and transaction hashes. Transaction consists of transfers.
-     * Transfer is an amount-address pair. There could be several transfers in a single transaction.
-     *
-     * @param integer      $blockCount      Number of blocks to return transaction hashes from. Required.
-     * @param integer|null $firstBlockIndex Starting height. Only allowed without $blockHash.
-     * @param string|null  $blockHash       Hash of the starting block. Only allowed without $firstBlockIndex.
-     * @param array|null   $addresses       Array of strings, where each string is an address. Optional.
-     * @param string|null  $paymentId       Valid payment_id. Optional.
-     */
-    public function getTransactionHashes(
-        $blockCount,
-        $firstBlockIndex = null,
-        $blockHash = null,
-        $addresses = null,
-        $paymentId = null
-    ) {
+        return $this->request('getBlockHashes', $params);
     }
 
     /**
@@ -250,14 +270,55 @@ class Client
      * @param string|null  $blockHash       Hash of the starting block. Only allowed without $firstBlockIndex.
      * @param array|null   $addresses       Array of strings, where each string is an address. Optional.
      * @param string|null  $paymentId       Valid payment_id. Optional.
+     * @return ResponseInterface
+     */
+    public function getTransactionHashes(
+        int $blockCount,
+        int $firstBlockIndex = null,
+        string $blockHash = null,
+        array $addresses = null,
+        string $paymentId = null
+    ) {
+        $params = [
+            'blockCount' => $blockCount,
+        ];
+
+        if (!is_null($firstBlockIndex)) $params['firstBlockIndex'] = $firstBlockIndex;
+        if (!is_null($blockHash)) $params['blockHash'] = $blockHash;
+        if (!is_null($addresses)) $params['addresses'] = $addresses;
+        if (!is_null($paymentId)) $params['paymentId'] = $paymentId;
+
+        return $this->request('getTransactionHashes', $params);
+    }
+
+    /**
+     * Returns an array of block and transaction hashes. Transaction consists of transfers.
+     * Transfer is an amount-address pair. There could be several transfers in a single transaction.
+     *
+     * @param integer      $blockCount      Number of blocks to return transaction hashes from. Required.
+     * @param integer|null $firstBlockIndex Starting height. Only allowed without $blockHash.
+     * @param string|null  $blockHash       Hash of the starting block. Only allowed without $firstBlockIndex.
+     * @param array|null   $addresses       Array of strings, where each string is an address. Optional.
+     * @param string|null  $paymentId       Valid payment_id. Optional.
+     * @return ResponseInterface
      */
     public function getTransactions(
-        $blockCount,
-        $firstBlockIndex = null,
-        $blockHash = null,
-        $addresses = null,
-        $paymentId = null
+        int $blockCount,
+        int $firstBlockIndex = null,
+        string $blockHash = null,
+        array $addresses = null,
+        string $paymentId = null
     ) {
+        $params = [
+            'blockCount' => $blockCount,
+        ];
+
+        if (!is_null($firstBlockIndex)) $params['firstBlockIndex'] = $firstBlockIndex;
+        if (!is_null($blockHash)) $params['blockHash'] = $blockHash;
+        if (!is_null($addresses)) $params['addresses'] = $addresses;
+        if (!is_null($paymentId)) $params['paymentId'] = $paymentId;
+
+        return $this->request('getTransactions', $params);
     }
 
     /**
@@ -266,48 +327,222 @@ class Client
      * transfers in a single transaction.
      *
      * @param array|null $addresses Array of strings, where each string is a valid address. Optional.
+     * @return ResponseInterface
      */
-    public function getUnconfirmedTransactionHashes($addresses = null) { }
+    public function getUnconfirmedTransactionHashes(array $addresses = null)
+    {
+        $params = [];
+
+        if (!is_null($addresses)) $params['addresses'] = $addresses;
+
+        return $this->request('getUnconfirmedTransactionHashes', $params);
+    }
 
     /**
      * Returns information about a particular transaction. Transaction consists of transfers.
      * Transfer is an amount-address pair. There could be several transfers in a single transaction.
      *
      * @param string $transactionHash Hash of the requested transaction. Required.
+     * @return ResponseInterface
      */
-    public function getTransaction($transactionHash) { }
+    public function getTransaction(string $transactionHash)
+    {
+        $params = [
+            'transactionHash' => $transactionHash
+        ];
 
-    /**
-     * @param integer $anonymity Privacy level (a discrete number from 1 to infinity). 6+ recommended. Required.
-     * @param array   $transfers Array that contains: address as string, amount as integer. Required.
-     * @param         $fee Transaction fee.
-     * @param null    $addresses
-     * @param null    $unlockTime
-     * @param null    $extra
-     * @param null    $paymentId
-     * @param null    $changeAddress
-     */
-    public function sendTransaction(
-        $anonymity,
-        $transfers,
-        $fee,
-        $addresses = null,
-        $unlockTime = null,
-        $extra = null,
-        $paymentId = null,
-        $changeAddress = null
-    ) {
+        return $this->request('getTransaction', $params);
     }
 
-    public function createDelayedTransaction() { }
+    /**
+     * Allows you to send transaction to one or several addresses. Also, it allows you to use a payment_id for a
+     * transaction to a single address.
+     *
+     * @param integer      $anonymity     Privacy level (a discrete number from 1 to infinity).
+     *                                    6+ recommended. Required.
+     * @param array        $transfers     Array that contains: address as string, amount as integer. Required.
+     * @param integer      $fee           Transaction fee. Required.
+     * @param array|null   $addresses     Array of strings, where each string is an address to take the funds
+     *                                    from. Optional.
+     * @param integer|null $unlockTime    Height of the block until which transaction is going to be locked for
+     *                                    spending. Optional.
+     * @param string|null  $extra         String of variable length. Can contain A-Z, 0-9 characters. Optional.
+     * @param string|null  $paymentId     Optional.
+     * @param string|null  $changeAddress Valid and existing in this container address. If container contains only
+     *                                    1 address, $changeAddress field can be left empty and the change is going to
+     *                                    be sent to this address. If $addresses field contains only 1 address,
+     *                                    $changeAddress can be left empty and the change is going to be sent to this
+     *                                    address. In the rest of the cases, $changeAddress field is mandatory and
+     *                                    must contain an address.
+     * @return ResponseInterface
+     */
+    public function sendTransaction(
+        int $anonymity,
+        array $transfers,
+        int $fee,
+        array $addresses = null,
+        int $unlockTime = null,
+        string $extra = null,
+        string $paymentId = null,
+        string $changeAddress = null
+    ) {
+        $params = [
+            'anonymity' => $anonymity,
+            'transfers' => $transfers,
+            'fee'       => $fee,
+        ];
 
-    public function getDelayedTransactionHashes() { }
+        if (!is_null($addresses)) $params['addresses'] = $addresses;
+        if (!is_null($unlockTime)) $params['unlockTime'] = $unlockTime;
+        if (!is_null($extra)) $params['extra'] = $extra;
+        if (!is_null($paymentId)) $params['paymentId'] = $paymentId;
+        if (!is_null($changeAddress)) $params['changeAddress'] = $changeAddress;
 
-    public function deleteDelayedTransaction() { }
+        return $this->request('sendTransaction', $params);
+    }
 
-    public function sendDelayedTransaction() { }
+    /**
+     * Creates a delayed transaction. Such transactions are not sent into the network automatically and should be
+     * pushed using sendDelayedTransaction method.
+     *
+     * @param integer      $anonymity     Privacy level (a discrete number from 1 to infinity).
+     *                                    6+ recommended. Required.
+     * @param array        $transfers     Array that contains: address as string, amount as integer. Required.
+     * @param integer      $fee           Transaction fee. Required.
+     * @param array|null   $addresses     Array of strings, where each string is an address to take the funds
+     *                                    from. Optional.
+     * @param integer|null $unlockTime    Height of the block until which transaction is going to be locked for
+     *                                    spending. Optional.
+     * @param string|null  $extra         String of variable length. Can contain A-Z, 0-9 characters. Optional.
+     * @param string|null  $paymentId     Optional.
+     * @param string|null  $changeAddress Valid and existing in this container address. If container contains only
+     *                                    1 address, $changeAddress field can be left empty and the change is going to
+     *                                    be sent to this address. If $addresses field contains only 1 address,
+     *                                    $changeAddress can be left empty and the change is going to be sent to this
+     *                                    address. In the rest of the cases, $changeAddress field is mandatory and
+     *                                    must contain an address.
+     * @return ResponseInterface
+     */
+    public function createDelayedTransaction(
+        int $anonymity,
+        array $transfers,
+        int $fee,
+        array $addresses = null,
+        int $unlockTime = null,
+        string $extra = null,
+        string $paymentId = null,
+        string $changeAddress = null
+    ) {
+        $params = [
+            'anonymity' => $anonymity,
+            'transfers' => $transfers,
+            'fee'       => $fee,
+        ];
 
-    public function sendFusionTransaction() { }
+        if (!is_null($addresses)) $params['addresses'] = $addresses;
+        if (!is_null($unlockTime)) $params['unlockTime'] = $unlockTime;
+        if (!is_null($extra)) $params['extra'] = $extra;
+        if (!is_null($paymentId)) $params['paymentId'] = $paymentId;
+        if (!is_null($changeAddress)) $params['changeAddress'] = $changeAddress;
 
-    public function estimateFusion() { }
+        return $this->request('createDelayedTransaction', $params);
+    }
+
+    /**
+     * Returns hashes of delayed transactions.
+     *
+     * @return ResponseInterface
+     */
+    public function getDelayedTransactionHashes()
+    {
+        return $this->request('getDelayedTransactionHashes', []);
+    }
+
+    /**
+     * Deletes a specified delayed transaction.
+     *
+     * @param string $transactionHash Valid, existing delayed transaction. Required.
+     * @return ResponseInterface
+     */
+    public function deleteDelayedTransaction(string $transactionHash)
+    {
+        $params = [
+            'transactionHash' => $transactionHash
+        ];
+
+        return $this->request('deleteDelayedTransaction', $params);
+    }
+
+    /**
+     * Sends a specified delayed transaction.
+     *
+     * @param string $transactionHash Valid, existing delayed transaction. Required.
+     * @return ResponseInterface
+     */
+    public function sendDelayedTransaction(string $transactionHash)
+    {
+        $params = [
+            'transactionHash' => $transactionHash
+        ];
+
+        return $this->request('sendDelayedTransaction', $params);
+    }
+
+    /**
+     * Allows you to send a fusion transaction, by taking funds from selected
+     * addresses and transferring them to the destination address.
+     *
+     * @param integer     $threshold          Value that determines which outputs will be optimized. Only the outputs,
+     *                                        lesser than the threshold value, will be included into a fusion
+     *                                        transaction. Required.
+     * @param integer     $anonymity          Privacy level (a discrete number from 1 to infinity). Level 6 and higher
+     *                                        is recommended. Required.
+     * @param array|null  $addresses          Array of strings, where each string is an address to take the funds from.
+     *                                        Optional.
+     * @param string|null $destinationAddress An address that the optimized funds will be sent to. Valid and existing
+     *                                        in this container address. If container contains only 1 address,
+     *                                        $destinationAddress field can be left empty and the funds are going to be
+     *                                        sent to this address. If $addresses field contains only 1 address,
+     *                                        $destinationAddress can be left empty and the funds are going to be sent
+     *                                        to this address. In the rest of the cases, $destinationAddress field is
+     *                                        mandatory and must contain an address.
+     * @return ResponseInterface
+     */
+    public function sendFusionTransaction(
+        int $threshold,
+        int $anonymity,
+        array $addresses = null,
+        string $destinationAddress = null
+    ) {
+        $params = [
+            'threshold' => $threshold,
+            'anonymity' => $anonymity,
+        ];
+
+        if (!is_null($addresses)) $params['addresses'] = $addresses;
+        if (!is_null($destinationAddress)) $params['destinationAddress'] = $destinationAddress;
+
+        return $this->request('sendFusionTransaction', $params);
+    }
+
+    /**
+     * Counts the number of unspent outputs of the specified addresses and returns how many of those outputs can be
+     * optimized. This method is used to understand if a fusion transaction can be created. If fusionReadyCount returns
+     * a value = 0, then a fusion transaction cannot be created.
+     *
+     * @param integer    $threshold Value that determines which outputs will be optimized. Only the outputs, lesser
+     *                              than the threshold value, will be included into a fusion transaction. Required.
+     * @param array|null $addresses Array of strings, where each string is an address to take the funds from. Optional.
+     * @return ResponseInterface
+     */
+    public function estimateFusion(int $threshold, array $addresses = null)
+    {
+        $params = [
+            'threshold' => $threshold,
+        ];
+
+        if (!is_null($addresses)) $params['addresses'] = $addresses;
+
+        return $this->request('sendFusionTransaction', $params);
+    }
 }
