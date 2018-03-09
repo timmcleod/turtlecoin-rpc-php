@@ -130,7 +130,7 @@ class Client
      * @param string|null $viewSecretKey Private view key. Optional.
      * @return ResponseInterface
      */
-    public function reset(string $viewSecretKey = null)
+    public function reset(string $viewSecretKey = null):ResponseInterface
     {
         $params = [];
 
@@ -144,7 +144,7 @@ class Client
      *
      * @return ResponseInterface
      */
-    public function save()
+    public function save():ResponseInterface
     {
         return $this->request('save', []);
     }
@@ -154,7 +154,7 @@ class Client
      *
      * @return ResponseInterface
      */
-    public function getViewKey()
+    public function getViewKey():ResponseInterface
     {
         return $this->request('getViewKey', []);
     }
@@ -165,7 +165,7 @@ class Client
      * @param string $address Valid and existing in this container address. Required.
      * @return ResponseInterface
      */
-    public function getSpendKeys(string $address)
+    public function getSpendKeys(string $address):ResponseInterface
     {
         $params = [
             'address' => $address
@@ -180,7 +180,7 @@ class Client
      *
      * @return ResponseInterface
      */
-    public function getStatus()
+    public function getStatus():ResponseInterface
     {
         return $this->request('getStatus', []);
     }
@@ -190,7 +190,7 @@ class Client
      *
      * @return ResponseInterface
      */
-    public function getAddresses()
+    public function getAddresses():ResponseInterface
     {
         return $this->request('getAddresses', []);
     }
@@ -204,7 +204,7 @@ class Client
      *                                    RPC Wallet creates view address. Optional.
      * @return ResponseInterface
      */
-    public function createAddress(string $secretSpendKey = null, string $publicSpendKey = null)
+    public function createAddress(string $secretSpendKey = null, string $publicSpendKey = null):ResponseInterface
     {
         $params = [];
 
@@ -220,7 +220,7 @@ class Client
      * @param string $address An address to be deleted. Required.
      * @return ResponseInterface
      */
-    public function deleteAddress(string $address)
+    public function deleteAddress(string $address):ResponseInterface
     {
         $params = [
             'address' => $address
@@ -235,7 +235,7 @@ class Client
      * @param string|null $address Valid and existing address in this wallet. Optional.
      * @return ResponseInterface
      */
-    public function getBalance(string $address = null)
+    public function getBalance(string $address = null):ResponseInterface
     {
         $params = [];
 
@@ -247,11 +247,11 @@ class Client
     /**
      * Returns an array of block hashes for a specified block range.
      *
-     * @param integer $firstBlockIndex Starting height. Required.
-     * @param integer $blockCount      Number of blocks to process. Required.
+     * @param int $firstBlockIndex Starting height. Required.
+     * @param int $blockCount      Number of blocks to process. Required.
      * @return ResponseInterface
      */
-    public function getBlockHashes(int $firstBlockIndex, int $blockCount)
+    public function getBlockHashes(int $firstBlockIndex, int $blockCount):ResponseInterface
     {
         $params = [
             'firstBlockIndex' => $firstBlockIndex,
@@ -265,11 +265,11 @@ class Client
      * Returns an array of block and transaction hashes. Transaction consists of transfers.
      * Transfer is an amount-address pair. There could be several transfers in a single transaction.
      *
-     * @param integer      $blockCount      Number of blocks to return transaction hashes from. Required.
-     * @param integer|null $firstBlockIndex Starting height. Only allowed without $blockHash.
-     * @param string|null  $blockHash       Hash of the starting block. Only allowed without $firstBlockIndex.
-     * @param array|null   $addresses       Array of strings, where each string is an address. Optional.
-     * @param string|null  $paymentId       Valid payment_id. Optional.
+     * @param int         $blockCount      Number of blocks to return transaction hashes from. Required.
+     * @param int|null    $firstBlockIndex Starting height. Only allowed without $blockHash.
+     * @param string|null $blockHash       Hash of the starting block. Only allowed without $firstBlockIndex.
+     * @param array|null  $addresses       Array of strings, where each string is an address. Optional.
+     * @param string|null $paymentId       Valid payment_id. Optional.
      * @return ResponseInterface
      */
     public function getTransactionHashes(
@@ -278,7 +278,7 @@ class Client
         string $blockHash = null,
         array $addresses = null,
         string $paymentId = null
-    ) {
+    ):ResponseInterface {
         $params = [
             'blockCount' => $blockCount,
         ];
@@ -295,11 +295,11 @@ class Client
      * Returns an array of block and transaction hashes. Transaction consists of transfers.
      * Transfer is an amount-address pair. There could be several transfers in a single transaction.
      *
-     * @param integer      $blockCount      Number of blocks to return transaction hashes from. Required.
-     * @param integer|null $firstBlockIndex Starting height. Only allowed without $blockHash.
-     * @param string|null  $blockHash       Hash of the starting block. Only allowed without $firstBlockIndex.
-     * @param array|null   $addresses       Array of strings, where each string is an address. Optional.
-     * @param string|null  $paymentId       Valid payment_id. Optional.
+     * @param int         $blockCount      Number of blocks to return transaction hashes from. Required.
+     * @param int|null    $firstBlockIndex Starting height. Only allowed without $blockHash.
+     * @param string|null $blockHash       Hash of the starting block. Only allowed without $firstBlockIndex.
+     * @param array|null  $addresses       Array of strings, where each string is an address. Optional.
+     * @param string|null $paymentId       Valid payment_id. Optional.
      * @return ResponseInterface
      */
     public function getTransactions(
@@ -308,7 +308,7 @@ class Client
         string $blockHash = null,
         array $addresses = null,
         string $paymentId = null
-    ) {
+    ):ResponseInterface {
         $params = [
             'blockCount' => $blockCount,
         ];
@@ -329,7 +329,7 @@ class Client
      * @param array|null $addresses Array of strings, where each string is a valid address. Optional.
      * @return ResponseInterface
      */
-    public function getUnconfirmedTransactionHashes(array $addresses = null)
+    public function getUnconfirmedTransactionHashes(array $addresses = null):ResponseInterface
     {
         $params = [];
 
@@ -345,7 +345,7 @@ class Client
      * @param string $transactionHash Hash of the requested transaction. Required.
      * @return ResponseInterface
      */
-    public function getTransaction(string $transactionHash)
+    public function getTransaction(string $transactionHash):ResponseInterface
     {
         $params = [
             'transactionHash' => $transactionHash
@@ -358,17 +358,17 @@ class Client
      * Allows you to send transaction to one or several addresses. Also, it allows you to use a payment_id for a
      * transaction to a single address.
      *
-     * @param integer      $anonymity     Privacy level (a discrete number from 1 to infinity).
+     * @param int         $anonymity      Privacy level (a discrete number from 1 to infinity).
      *                                    6+ recommended. Required.
-     * @param array        $transfers     Array that contains: address as string, amount as integer. Required.
-     * @param integer      $fee           Transaction fee. Required.
-     * @param array|null   $addresses     Array of strings, where each string is an address to take the funds
+     * @param array       $transfers      Array that contains: address as string, amount as integer. Required.
+     * @param int         $fee            Transaction fee. Required.
+     * @param array|null  $addresses      Array of strings, where each string is an address to take the funds
      *                                    from. Optional.
-     * @param integer|null $unlockTime    Height of the block until which transaction is going to be locked for
+     * @param int|null    $unlockTime     Height of the block until which transaction is going to be locked for
      *                                    spending. Optional.
-     * @param string|null  $extra         String of variable length. Can contain A-Z, 0-9 characters. Optional.
-     * @param string|null  $paymentId     Optional.
-     * @param string|null  $changeAddress Valid and existing in this container address. If container contains only
+     * @param string|null $extra          String of variable length. Can contain A-Z, 0-9 characters. Optional.
+     * @param string|null $paymentId      Optional.
+     * @param string|null $changeAddress  Valid and existing in this container address. If container contains only
      *                                    1 address, $changeAddress field can be left empty and the change is going to
      *                                    be sent to this address. If $addresses field contains only 1 address,
      *                                    $changeAddress can be left empty and the change is going to be sent to this
@@ -385,7 +385,7 @@ class Client
         string $extra = null,
         string $paymentId = null,
         string $changeAddress = null
-    ) {
+    ):ResponseInterface {
         $params = [
             'anonymity' => $anonymity,
             'transfers' => $transfers,
@@ -405,17 +405,17 @@ class Client
      * Creates a delayed transaction. Such transactions are not sent into the network automatically and should be
      * pushed using sendDelayedTransaction method.
      *
-     * @param integer      $anonymity     Privacy level (a discrete number from 1 to infinity).
+     * @param int         $anonymity      Privacy level (a discrete number from 1 to infinity).
      *                                    6+ recommended. Required.
-     * @param array        $transfers     Array that contains: address as string, amount as integer. Required.
-     * @param integer      $fee           Transaction fee. Required.
-     * @param array|null   $addresses     Array of strings, where each string is an address to take the funds
+     * @param array       $transfers      Array that contains: address as string, amount as integer. Required.
+     * @param int         $fee            Transaction fee. Required.
+     * @param array|null  $addresses      Array of strings, where each string is an address to take the funds
      *                                    from. Optional.
-     * @param integer|null $unlockTime    Height of the block until which transaction is going to be locked for
+     * @param int|null    $unlockTime     Height of the block until which transaction is going to be locked for
      *                                    spending. Optional.
-     * @param string|null  $extra         String of variable length. Can contain A-Z, 0-9 characters. Optional.
-     * @param string|null  $paymentId     Optional.
-     * @param string|null  $changeAddress Valid and existing in this container address. If container contains only
+     * @param string|null $extra          String of variable length. Can contain A-Z, 0-9 characters. Optional.
+     * @param string|null $paymentId      Optional.
+     * @param string|null $changeAddress  Valid and existing in this container address. If container contains only
      *                                    1 address, $changeAddress field can be left empty and the change is going to
      *                                    be sent to this address. If $addresses field contains only 1 address,
      *                                    $changeAddress can be left empty and the change is going to be sent to this
@@ -432,7 +432,7 @@ class Client
         string $extra = null,
         string $paymentId = null,
         string $changeAddress = null
-    ) {
+    ):ResponseInterface {
         $params = [
             'anonymity' => $anonymity,
             'transfers' => $transfers,
@@ -453,7 +453,7 @@ class Client
      *
      * @return ResponseInterface
      */
-    public function getDelayedTransactionHashes()
+    public function getDelayedTransactionHashes():ResponseInterface
     {
         return $this->request('getDelayedTransactionHashes', []);
     }
@@ -464,7 +464,7 @@ class Client
      * @param string $transactionHash Valid, existing delayed transaction. Required.
      * @return ResponseInterface
      */
-    public function deleteDelayedTransaction(string $transactionHash)
+    public function deleteDelayedTransaction(string $transactionHash):ResponseInterface
     {
         $params = [
             'transactionHash' => $transactionHash
@@ -479,7 +479,7 @@ class Client
      * @param string $transactionHash Valid, existing delayed transaction. Required.
      * @return ResponseInterface
      */
-    public function sendDelayedTransaction(string $transactionHash)
+    public function sendDelayedTransaction(string $transactionHash):ResponseInterface
     {
         $params = [
             'transactionHash' => $transactionHash
@@ -492,10 +492,10 @@ class Client
      * Allows you to send a fusion transaction, by taking funds from selected
      * addresses and transferring them to the destination address.
      *
-     * @param integer     $threshold          Value that determines which outputs will be optimized. Only the outputs,
+     * @param int         $threshold          Value that determines which outputs will be optimized. Only the outputs,
      *                                        lesser than the threshold value, will be included into a fusion
      *                                        transaction. Required.
-     * @param integer     $anonymity          Privacy level (a discrete number from 1 to infinity). Level 6 and higher
+     * @param int         $anonymity          Privacy level (a discrete number from 1 to infinity). Level 6 and higher
      *                                        is recommended. Required.
      * @param array|null  $addresses          Array of strings, where each string is an address to take the funds from.
      *                                        Optional.
@@ -513,7 +513,7 @@ class Client
         int $anonymity,
         array $addresses = null,
         string $destinationAddress = null
-    ) {
+    ):ResponseInterface {
         $params = [
             'threshold' => $threshold,
             'anonymity' => $anonymity,
@@ -530,12 +530,12 @@ class Client
      * optimized. This method is used to understand if a fusion transaction can be created. If fusionReadyCount returns
      * a value = 0, then a fusion transaction cannot be created.
      *
-     * @param integer    $threshold Value that determines which outputs will be optimized. Only the outputs, lesser
+     * @param int        $threshold Value that determines which outputs will be optimized. Only the outputs, lesser
      *                              than the threshold value, will be included into a fusion transaction. Required.
      * @param array|null $addresses Array of strings, where each string is an address to take the funds from. Optional.
      * @return ResponseInterface
      */
-    public function estimateFusion(int $threshold, array $addresses = null)
+    public function estimateFusion(int $threshold, array $addresses = null):ResponseInterface
     {
         $params = [
             'threshold' => $threshold,
