@@ -6,18 +6,34 @@
 
 TurtleCoin Walletd RPC PHP is a PHP wrapper for the TurtleCoin walletd JSON-RPC interface.
 
-1) [Installation](#installation)
+---
+
+1) [About TurtleCoin](#about-turtlecoin)
+1) [Install TurtleCoin Walletd RPC PHP](#install-turtlecoin-walletd-rpc-php)
 1) [Methods](#methods)
 1) [Examples](#examples)
-1) [Buy License](#buy-license)
-1) [License](#actual-license)
+1) [Community](#community)
+1) [License](#license)
 
-## Installation
+---
+
+## About TurtleCoin
+
+TurtleCoin is a fun, fast, and easy way to send money to friends and businesses.
+
+1) **Fast Transactions**: TurtleCoin is creating blocks every 30 seconds, as opposed to every 10 minutes. Your money travels 20x faster on TurtleCoin than on Bitcoin or BitcoinCash.
+1) **Privacy**: TurtleCoin has the same privacy features you'll find in Monero and Aeon. Every transaction is private unless you choose to make it public.
+1) **Easy To Use**: We support almost every OS, even on mobile you can make a secured paper-wallet for free, and get started with TurtleCoin in under 5 minutes.
+1) **Easy To Mine**: TurtleCoin comes with its own basic CPU miner, but you can also use any Monero mining software you're used to if you'd rather use GPU's or mining pools. We recommend XMR-Stak Unified Miner.
+1) **Community**: The TurtleCoin community is very welcoming to all users and developers. You won't get shouted at when things break, and we welcome critiques of our work. Please join us in our [Discord Chat](http://chat.turtlecoin.lol).
+1) **Support**: We are growing a community of developers and testers in our GitHub meta-forum. You can help by testing software and submitting bug reports, or even just cheering us on from the sidelines.
+
+## Install TurtleCoin Walletd RPC PHP
 
 This package requires PHP >=7.1.3. Require this package with composer:
 
 ```
-composer require timmcleod/turtlecoin-walletd-rpc-php
+composer require turtlecoin/turtlecoin-walletd-rpc-php
 ```
 
 ## Methods
@@ -49,7 +65,7 @@ composer require timmcleod/turtlecoin-walletd-rpc-php
 ## Examples
 
 ```php
-use TimMcLeod\TurtleCoin\Walletd;
+use TurtleCoin\Walletd;
 
 $walletd = new Walletd\Client();
 
@@ -57,7 +73,7 @@ $response = $walletd->getBalance($walletAddress);
 ```
 
 ```php
-use TimMcLeod\TurtleCoin\Walletd;
+use TurtleCoin\Walletd;
 
 $config = [
     'rpcHost'     => 'http://127.0.0.1',
@@ -72,16 +88,8 @@ $json = $walletd->getBalance($walletAddress)->getBody()->getContents();
 echo $json;
 
 > {"id":0,"jsonrpc":"2.0","result":["availableBalance":100,"lockedAmount":50]}
-```
-
-## Buy License
-
-Just kidding. This is free, open-source software. I would, however, appreciate any shells you want to send my way so I can buy TurtleCoin stickers.
-
-```
-TRTLv2z49dU7zGT4wuYBG2Sv4dkpWFJNb19PYUCeQ2Q89w6avCT92erRX7zye38CDpFA4XctvDoqC6gi5dCvEpT7gPijjPWnQFS
 ``` 
 
-## Actual License
+## License
 
 TurtleCoin Walletd RPC PHP is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).

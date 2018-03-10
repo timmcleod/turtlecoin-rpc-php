@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-use TimMcLeod\TurtleCoin\Walletd;
+use TurtleCoin\Walletd;
 
 class WalletdClientRequestTest extends TestCase
 {

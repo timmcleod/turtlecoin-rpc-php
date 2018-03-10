@@ -1,5 +1,5 @@
 {
-  "name": "timmcleod/turtlecoin-walletd-rpc-php",
+  "name": "turtlecoin/turtlecoin-walletd-rpc-php",
   "description": "A PHP wrapper for the TurtleCoin walletd daemon RPC interface",
   "keywords": [
     "TurtleCoin",
@@ -21,7 +21,7 @@
   },
   "autoload": {
     "psr-4": {
-      "TimMcLeod\\": "src/"
+      "TurtleCoin\\": "src/TurtleCoin"
     }
   },
   "autoload-dev": {

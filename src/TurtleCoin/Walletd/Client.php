@@ -1,6 +1,6 @@
 <?php
 
-namespace TimMcLeod\TurtleCoin\Walletd;
+namespace TurtleCoin\Walletd;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\ClientInterface;
