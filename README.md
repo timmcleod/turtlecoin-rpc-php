@@ -12,7 +12,6 @@ TurtleCoin Walletd RPC PHP is a PHP wrapper for the TurtleCoin walletd JSON-RPC 
 1) [Install TurtleCoin Walletd RPC PHP](#install-turtlecoin-walletd-rpc-php)
 1) [Methods](#methods)
 1) [Examples](#examples)
-1) [Community](#community)
 1) [License](#license)
 
 ---
