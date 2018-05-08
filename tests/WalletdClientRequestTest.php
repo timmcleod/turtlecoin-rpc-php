@@ -165,4 +165,5 @@ class WalletdClientRequestTest extends TestCase
     // TODO: test sendDelayedTransaction()
     // TODO: test sendFusionTransaction()
     // TODO: test estimateFusion()
+    // TODO: test getMnemonicSeed()
 }

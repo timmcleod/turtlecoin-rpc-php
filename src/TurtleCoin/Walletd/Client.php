@@ -545,4 +545,21 @@ class Client
 
         return $this->request('sendFusionTransaction', $params);
     }
+
+    /**
+     * Functions nearly the same as getSpendKeys(). It returns the mnemonic seed for the given address. However,
+     * because walletd supports multiple addresses in one container, not all wallets can have a mnemonic seed, and so
+     * the RPC request will return an error notifying the user the their private keys aren't deterministic.
+     *
+     * @param string $address Required.
+     * @return ResponseInterface
+     */
+    public function getMnemonicSeed(string $address):ResponseInterface
+    {
+        $params = [
+            'address' => $address,
+        ];
+
+        return $this->request('getMnemonicSeed', $params);
+    }
 }

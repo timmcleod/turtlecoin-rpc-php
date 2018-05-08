@@ -60,6 +60,7 @@ composer require turtlecoin/turtlecoin-walletd-rpc-php
 | sendDelayedTransaction | $transactionHash |	sendDelayedTransaction() method sends a specified delayed transaction. |
 | sendFusionTransaction | $threshold, $anonymity, $addresses, $destinationAddress |	sendFusionTransaction() method creates and sends a fusion transaction. |
 | estimateFusion | $threshold, $addresses |	estimateFusion() method allows to estimate a number of outputs that can be optimized with fusion transactions. |
+| getMnemonicSeed | $address |	getMnemonicSeed() method functions nearly the same as getSpendKeys(). It returns the mnemonic seed for the given address. |
 
 ## Examples
 
