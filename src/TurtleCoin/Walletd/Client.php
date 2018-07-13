@@ -562,4 +562,22 @@ class Client
 
         return $this->request('getMnemonicSeed', $params);
     }
+
+    /**
+     * Combines an address and a paymentId into an 'integrated' address, which contains both in an encoded form.
+     * This allows users to not have to supply a payment Id in their transfer, and hence cannot forget it.
+     *
+     * @param string $address Required.
+     * @param string $paymentId Required.
+     * @return ResponseInterface
+     */
+    public function createIntegratedAddress(string $address, string $paymentId):ResponseInterface
+    {
+        $params = [
+            'address' => $address,
+            'paymentId' => $paymentId,
+        ];
+
+        return $this->request('createIntegratedAddress', $params);
+    }
 }
