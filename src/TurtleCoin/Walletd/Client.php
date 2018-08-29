@@ -589,8 +589,8 @@ class Client
      *
      * @return ResponseInterface
      */
-    public function feeinfo():ResponseInterface
+    public function getFeeInfo():ResponseInterface
     {
-        return $this->request('feeinfo', []);
+        return $this->request('getFeeInfo', []);
     }
 }
