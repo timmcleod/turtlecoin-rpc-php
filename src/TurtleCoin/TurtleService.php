@@ -1,123 +1,19 @@
 <?php
 
-namespace TurtleCoin\Walletd;
+namespace TurtleCoin;
 
-use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\ClientInterface;
-use GuzzleHttp\RequestOptions;
-use Psr\Http\Message\ResponseInterface;
-use stdClass;
+use TurtleCoin\Http\JsonResponse;
+use TurtleCoin\Http\RpcClient;
 
-class Client
+/**
+ * Class TurtleService
+ * Wrapper for TurtleCoin's turtle-service (formerly walletd) JSON-RPC interface.
+ * @package TurtleCoin
+ */
+class TurtleService extends RpcClient
 {
-    /** @var ClientInterface */
-    protected $client = null;
-
-    /** @var int */
-    protected $rpcId = 0;
-
-    /** @var string */
-    protected $rpcHost = 'http://127.0.0.1';
-
     /** @var int */
     protected $rpcPort = 8070;
-
-    /** @var string */
-    protected $rpcPassword = 'test';
-
-    /**
-     * Wrapper for TurtleCoin walletd JSON-RPC interface.
-     *
-     * @param array $config Configuration options
-     */
-    public function __construct(array $config = [])
-    {
-        $this->configure($config);
-
-        $this->client = new GuzzleClient(empty($config['handler']) ? [] : ['handler' => $config['handler']]);
-    }
-
-    /**
-     * Applies configuration options.
-     *
-     * @param array $config Configuration options:
-     *                      rpcHost: The hostname of the walletd daemon (must include http://)
-     *                      rpcPort: The port number the walletd daemon is listening on
-     *                      rpcPassword: The password for walletd's JSON-RPC interface
-     */
-    public function configure(array $config = []):void
-    {
-        $config = array_intersect_key($config, array_flip(['rpcHost', 'rpcPort', 'rpcPassword']));
-
-        foreach ($config as $key => $value)
-        {
-            $this->{$key} = $value;
-        }
-    }
-
-    /**
-     * Returns array of configuration options.
-     *
-     * @return array
-     */
-    public function config():array
-    {
-        return [
-            'rpcHost'     => $this->rpcHost,
-            'rpcPort'     => $this->rpcPort,
-            'rpcPassword' => $this->rpcPassword,
-        ];
-    }
-
-    /**
-     * @param string $method
-     * @param array  $params
-     * @return ResponseInterface
-     */
-    public function request(string $method, array $params = []):ResponseInterface
-    {
-        $options = [
-            'jsonrpc' => '2.0',
-            'id'      => $this->rpcId,
-            'method'  => $method,
-            'params'  => $this->prepareParams($params)
-        ];
-
-        if (!empty($this->rpcPassword)) $options['password'] = $this->rpcPassword;
-
-        $response = $this->client->post($this->uri(), [RequestOptions::JSON => $options]);
-
-        $this->rpcId++;
-
-        return $response;
-    }
-
-    /**
-     * @param array $params
-     * @return array|stdClass
-     */
-    protected function prepareParams(array $params)
-    {
-        return empty($params) ? new stdClass() : $params;
-    }
-
-    /**
-     * Returns the walletd endpoint URI.
-     *
-     * @return string
-     */
-    public function uri():string
-    {
-        return "$this->rpcHost:$this->rpcPort/json_rpc";
-    }
-
-    /**
-     * @return ClientInterface
-     */
-    public function client():ClientInterface
-    {
-        return $this->client;
-    }
 
     /**
      * Re-syncs the wallet.
@@ -128,9 +24,9 @@ class Client
      * address for it.
      *
      * @param string|null $viewSecretKey Private view key. Optional.
-     * @return ResponseInterface
+     * @return JsonResponse
      */
-    public function reset(string $viewSecretKey = null):ResponseInterface
+    public function reset(string $viewSecretKey = null):JsonResponse
     {
         $params = [];
 
@@ -142,9 +38,9 @@ class Client
     /**
      * Saves the wallet.
      *
-     * @return ResponseInterface
+     * @return JsonResponse
      */
-    public function save():ResponseInterface
+    public function save():JsonResponse
     {
         return $this->request('save', []);
     }
@@ -152,9 +48,9 @@ class Client
     /**
      * Returns the view key.
      *
-     * @return ResponseInterface
+     * @return JsonResponse
      */
-    public function getViewKey():ResponseInterface
+    public function getViewKey():JsonResponse
     {
         return $this->request('getViewKey', []);
     }
@@ -163,12 +59,12 @@ class Client
      * Returns the spend keys.
      *
      * @param string $address Valid and existing in this container address. Required.
-     * @return ResponseInterface
+     * @return JsonResponse
      */
-    public function getSpendKeys(string $address):ResponseInterface
+    public function getSpendKeys(string $address):JsonResponse
     {
         $params = [
-            'address' => $address
+            'address' => $address,
         ];
 
         return $this->request('getSpendKeys', $params);
@@ -178,9 +74,9 @@ class Client
      * Returns information about the current RPC Wallet state:
      * block_count, known_block_count, last_block_hash and peer_count.
      *
-     * @return ResponseInterface
+     * @return JsonResponse
      */
-    public function getStatus():ResponseInterface
+    public function getStatus():JsonResponse
     {
         return $this->request('getStatus', []);
     }
@@ -188,9 +84,9 @@ class Client
     /**
      * Returns an array of your RPC Wallet's addresses.
      *
-     * @return ResponseInterface
+     * @return JsonResponse
      */
-    public function getAddresses():ResponseInterface
+    public function getAddresses():JsonResponse
     {
         return $this->request('getAddresses', []);
     }
@@ -202,9 +98,9 @@ class Client
      *                                    RPC Wallet creates spend address. Optional.
      * @param string|null $publicSpendKey Public spend key. If publicSpendKey was specified,
      *                                    RPC Wallet creates view address. Optional.
-     * @return ResponseInterface
+     * @return JsonResponse
      */
-    public function createAddress(string $secretSpendKey = null, string $publicSpendKey = null):ResponseInterface
+    public function createAddress(string $secretSpendKey = null, string $publicSpendKey = null):JsonResponse
     {
         $params = [];
 
@@ -218,12 +114,12 @@ class Client
      * Deletes a specified address.
      *
      * @param string $address An address to be deleted. Required.
-     * @return ResponseInterface
+     * @return JsonResponse
      */
-    public function deleteAddress(string $address):ResponseInterface
+    public function deleteAddress(string $address):JsonResponse
     {
         $params = [
-            'address' => $address
+            'address' => $address,
         ];
 
         return $this->request('deleteAddress', $params);
@@ -233,9 +129,9 @@ class Client
      * Method returns a balance for a specified address.
      *
      * @param string|null $address Valid and existing address in this wallet. Optional.
-     * @return ResponseInterface
+     * @return JsonResponse
      */
-    public function getBalance(string $address = null):ResponseInterface
+    public function getBalance(string $address = null):JsonResponse
     {
         $params = [];
 
@@ -249,9 +145,9 @@ class Client
      *
      * @param int $firstBlockIndex Starting height. Required.
      * @param int $blockCount      Number of blocks to process. Required.
-     * @return ResponseInterface
+     * @return JsonResponse
      */
-    public function getBlockHashes(int $firstBlockIndex, int $blockCount):ResponseInterface
+    public function getBlockHashes(int $firstBlockIndex, int $blockCount):JsonResponse
     {
         $params = [
             'firstBlockIndex' => $firstBlockIndex,
@@ -270,7 +166,7 @@ class Client
      * @param string|null $blockHash       Hash of the starting block. Only allowed without $firstBlockIndex.
      * @param array|null  $addresses       Array of strings, where each string is an address. Optional.
      * @param string|null $paymentId       Valid payment_id. Optional.
-     * @return ResponseInterface
+     * @return JsonResponse
      */
     public function getTransactionHashes(
         int $blockCount,
@@ -278,7 +174,7 @@ class Client
         string $blockHash = null,
         array $addresses = null,
         string $paymentId = null
-    ):ResponseInterface {
+    ):JsonResponse {
         $params = [
             'blockCount' => $blockCount,
         ];
@@ -300,7 +196,7 @@ class Client
      * @param string|null $blockHash       Hash of the starting block. Only allowed without $firstBlockIndex.
      * @param array|null  $addresses       Array of strings, where each string is an address. Optional.
      * @param string|null $paymentId       Valid payment_id. Optional.
-     * @return ResponseInterface
+     * @return JsonResponse
      */
     public function getTransactions(
         int $blockCount,
@@ -308,7 +204,7 @@ class Client
         string $blockHash = null,
         array $addresses = null,
         string $paymentId = null
-    ):ResponseInterface {
+    ):JsonResponse {
         $params = [
             'blockCount' => $blockCount,
         ];
@@ -327,9 +223,9 @@ class Client
      * transfers in a single transaction.
      *
      * @param array|null $addresses Array of strings, where each string is a valid address. Optional.
-     * @return ResponseInterface
+     * @return JsonResponse
      */
-    public function getUnconfirmedTransactionHashes(array $addresses = null):ResponseInterface
+    public function getUnconfirmedTransactionHashes(array $addresses = null):JsonResponse
     {
         $params = [];
 
@@ -343,12 +239,12 @@ class Client
      * Transfer is an amount-address pair. There could be several transfers in a single transaction.
      *
      * @param string $transactionHash Hash of the requested transaction. Required.
-     * @return ResponseInterface
+     * @return JsonResponse
      */
-    public function getTransaction(string $transactionHash):ResponseInterface
+    public function getTransaction(string $transactionHash):JsonResponse
     {
         $params = [
-            'transactionHash' => $transactionHash
+            'transactionHash' => $transactionHash,
         ];
 
         return $this->request('getTransaction', $params);
@@ -374,7 +270,7 @@ class Client
      *                                    $changeAddress can be left empty and the change is going to be sent to this
      *                                    address. In the rest of the cases, $changeAddress field is mandatory and
      *                                    must contain an address.
-     * @return ResponseInterface
+     * @return JsonResponse
      */
     public function sendTransaction(
         int $anonymity,
@@ -385,7 +281,7 @@ class Client
         string $extra = null,
         string $paymentId = null,
         string $changeAddress = null
-    ):ResponseInterface {
+    ):JsonResponse {
         $params = [
             'anonymity' => $anonymity,
             'transfers' => $transfers,
@@ -421,7 +317,7 @@ class Client
      *                                    $changeAddress can be left empty and the change is going to be sent to this
      *                                    address. In the rest of the cases, $changeAddress field is mandatory and
      *                                    must contain an address.
-     * @return ResponseInterface
+     * @return JsonResponse
      */
     public function createDelayedTransaction(
         int $anonymity,
@@ -432,7 +328,7 @@ class Client
         string $extra = null,
         string $paymentId = null,
         string $changeAddress = null
-    ):ResponseInterface {
+    ):JsonResponse {
         $params = [
             'anonymity' => $anonymity,
             'transfers' => $transfers,
@@ -451,9 +347,9 @@ class Client
     /**
      * Returns hashes of delayed transactions.
      *
-     * @return ResponseInterface
+     * @return JsonResponse
      */
-    public function getDelayedTransactionHashes():ResponseInterface
+    public function getDelayedTransactionHashes():JsonResponse
     {
         return $this->request('getDelayedTransactionHashes', []);
     }
@@ -462,12 +358,12 @@ class Client
      * Deletes a specified delayed transaction.
      *
      * @param string $transactionHash Valid, existing delayed transaction. Required.
-     * @return ResponseInterface
+     * @return JsonResponse
      */
-    public function deleteDelayedTransaction(string $transactionHash):ResponseInterface
+    public function deleteDelayedTransaction(string $transactionHash):JsonResponse
     {
         $params = [
-            'transactionHash' => $transactionHash
+            'transactionHash' => $transactionHash,
         ];
 
         return $this->request('deleteDelayedTransaction', $params);
@@ -477,12 +373,12 @@ class Client
      * Sends a specified delayed transaction.
      *
      * @param string $transactionHash Valid, existing delayed transaction. Required.
-     * @return ResponseInterface
+     * @return JsonResponse
      */
-    public function sendDelayedTransaction(string $transactionHash):ResponseInterface
+    public function sendDelayedTransaction(string $transactionHash):JsonResponse
     {
         $params = [
-            'transactionHash' => $transactionHash
+            'transactionHash' => $transactionHash,
         ];
 
         return $this->request('sendDelayedTransaction', $params);
@@ -506,14 +402,14 @@ class Client
      *                                        $destinationAddress can be left empty and the funds are going to be sent
      *                                        to this address. In the rest of the cases, $destinationAddress field is
      *                                        mandatory and must contain an address.
-     * @return ResponseInterface
+     * @return JsonResponse
      */
     public function sendFusionTransaction(
         int $threshold,
         int $anonymity,
         array $addresses = null,
         string $destinationAddress = null
-    ):ResponseInterface {
+    ):JsonResponse {
         $params = [
             'threshold' => $threshold,
             'anonymity' => $anonymity,
@@ -533,9 +429,9 @@ class Client
      * @param int        $threshold Value that determines which outputs will be optimized. Only the outputs, lesser
      *                              than the threshold value, will be included into a fusion transaction. Required.
      * @param array|null $addresses Array of strings, where each string is an address to take the funds from. Optional.
-     * @return ResponseInterface
+     * @return JsonResponse
      */
-    public function estimateFusion(int $threshold, array $addresses = null):ResponseInterface
+    public function estimateFusion(int $threshold, array $addresses = null):JsonResponse
     {
         $params = [
             'threshold' => $threshold,
@@ -548,13 +444,13 @@ class Client
 
     /**
      * Functions nearly the same as getSpendKeys(). It returns the mnemonic seed for the given address. However,
-     * because walletd supports multiple addresses in one container, not all wallets can have a mnemonic seed, and so
-     * the RPC request will return an error notifying the user the their private keys aren't deterministic.
+     * because turtle-service supports multiple addresses in one container, not all wallets can have a mnemonic seed,
+     * and so the RPC request will return an error notifying the user the their private keys aren't deterministic.
      *
      * @param string $address Required.
-     * @return ResponseInterface
+     * @return JsonResponse
      */
-    public function getMnemonicSeed(string $address):ResponseInterface
+    public function getMnemonicSeed(string $address):JsonResponse
     {
         $params = [
             'address' => $address,
@@ -567,14 +463,14 @@ class Client
      * Combines an address and a paymentId into an 'integrated' address, which contains both in an encoded form.
      * This allows users to not have to supply a payment Id in their transfer, and hence cannot forget it.
      *
-     * @param string $address Required.
+     * @param string $address   Required.
      * @param string $paymentId Required.
-     * @return ResponseInterface
+     * @return JsonResponse
      */
-    public function createIntegratedAddress(string $address, string $paymentId):ResponseInterface
+    public function createIntegratedAddress(string $address, string $paymentId):JsonResponse
     {
         $params = [
-            'address' => $address,
+            'address'   => $address,
             'paymentId' => $paymentId,
         ];
 
@@ -587,9 +483,9 @@ class Client
      * the owners address on each sendTransaction() and sendDelayedTransaction() request automatically.
      * Note that it does not apply to sendFusionTransaction().
      *
-     * @return ResponseInterface
+     * @return JsonResponse
      */
-    public function getFeeInfo():ResponseInterface
+    public function getFeeInfo():JsonResponse
     {
         return $this->request('getFeeInfo', []);
     }

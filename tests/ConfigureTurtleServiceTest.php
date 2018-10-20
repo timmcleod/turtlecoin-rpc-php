@@ -2,13 +2,13 @@
 
 namespace Tests;
 
-use TurtleCoin\Walletd;
+use TurtleCoin\TurtleService;
 
-class ConfigureWalletdClientTest extends TestCase
+class ConfigureTurtleServiceTest extends TestCase
 {
     public function testConfigureDefaultValues()
     {
-        $walletd = new Walletd\Client();
+        $walletd = new TurtleService();
         $walletd->configure([]);
         $this->assertEquals([
             'rpcHost'     => 'http://127.0.0.1',
@@ -19,7 +19,7 @@ class ConfigureWalletdClientTest extends TestCase
 
     public function testConfigureAllValues()
     {
-        $walletd = new Walletd\Client();
+        $walletd = new TurtleService();
         $walletd->configure([
             'rpcHost'     => 'https://192.168.10.10',
             'rpcPort'     => 8080,
@@ -35,7 +35,7 @@ class ConfigureWalletdClientTest extends TestCase
 
     public function testConfigureViaConstructor()
     {
-        $walletd = new Walletd\Client([
+        $walletd = new TurtleService([
             'rpcHost'     => 'https://192.168.10.10',
             'rpcPort'     => 8080,
             'rpcPassword' => 'testing',
@@ -50,7 +50,7 @@ class ConfigureWalletdClientTest extends TestCase
 
     public function testConfigureDoesntOverwriteOtherVariables()
     {
-        $walletd = new Walletd\Client();
+        $walletd = new TurtleService();
         $walletd->configure([
             'client' => 'should not be able to set this value',
         ]);

@@ -2,13 +2,13 @@
 
 namespace Tests;
 
-use TurtleCoin\Walletd;
+use TurtleCoin\TurtleService;
 
-class WalletdClientRequestTest extends TestCase
+class TurtleServiceRequestTest extends TestCase
 {
     public function testReset()
     {
-        $client = new Walletd\Client([
+        $client = new TurtleService([
             'handler' => $this->mockHandler([
                 $this->emptyResultResponse(),
                 $this->emptyResultResponse()
@@ -18,19 +18,19 @@ class WalletdClientRequestTest extends TestCase
         // Without view key
         $this->assertEquals(
             $this->emptyResultResponse()->getBody()->getContents(),
-            $client->reset()->getBody()->getContents()
+            $client->reset()->toJson()
         );
 
         // With view key
         $this->assertEquals(
             $this->emptyResultResponse()->getBody()->getContents(),
-            $client->reset(static::VIEW_SECRET_KEY)->getBody()->getContents()
+            $client->reset(static::VIEW_SECRET_KEY)->toJson()
         );
     }
 
     public function testSave()
     {
-        $client = new Walletd\Client([
+        $client = new TurtleService([
             'handler' => $this->mockHandler([
                 $this->emptyResultResponse()
             ])
@@ -38,13 +38,13 @@ class WalletdClientRequestTest extends TestCase
 
         $this->assertEquals(
             $this->emptyResultResponse()->getBody()->getContents(),
-            $client->save()->getBody()->getContents()
+            $client->save()->toJson()
         );
     }
 
     public function testGetViewKey()
     {
-        $client = new Walletd\Client([
+        $client = new TurtleService([
             'handler' => $this->mockHandler([
                 $this->getViewKeyResponse()
             ])
@@ -52,13 +52,13 @@ class WalletdClientRequestTest extends TestCase
 
         $this->assertEquals(
             $this->getViewKeyResponse()->getBody()->getContents(),
-            $client->getViewKey()->getBody()->getContents()
+            $client->getViewKey()->toJson()
         );
     }
 
     public function testGetSpendKeys()
     {
-        $client = new Walletd\Client([
+        $client = new TurtleService([
             'handler' => $this->mockHandler([
                 $this->getSpendKeysResponse()
             ])
@@ -66,13 +66,13 @@ class WalletdClientRequestTest extends TestCase
 
         $this->assertEquals(
             $this->getSpendKeysResponse()->getBody()->getContents(),
-            $client->getSpendKeys(static::ADDRESS)->getBody()->getContents()
+            $client->getSpendKeys(static::ADDRESS)->toJson()
         );
     }
 
     public function testGetStatus()
     {
-        $client = new Walletd\Client([
+        $client = new TurtleService([
             'handler' => $this->mockHandler([
                 $this->getStatusResponse()
             ])
@@ -80,13 +80,13 @@ class WalletdClientRequestTest extends TestCase
 
         $this->assertEquals(
             $this->getStatusResponse()->getBody()->getContents(),
-            $client->getStatus()->getBody()->getContents()
+            $client->getStatus()->toJson()
         );
     }
 
     public function testGetAddresses()
     {
-        $client = new Walletd\Client([
+        $client = new TurtleService([
             'handler' => $this->mockHandler([
                 $this->getAddressesResponse()
             ])
@@ -94,13 +94,13 @@ class WalletdClientRequestTest extends TestCase
 
         $this->assertEquals(
             $this->getAddressesResponse()->getBody()->getContents(),
-            $client->getAddresses()->getBody()->getContents()
+            $client->getAddresses()->toJson()
         );
     }
 
     public function testCreateAddress()
     {
-        $client = new Walletd\Client([
+        $client = new TurtleService([
             'handler' => $this->mockHandler([
                 $this->createAddressResponse()
             ])
@@ -108,13 +108,13 @@ class WalletdClientRequestTest extends TestCase
 
         $this->assertEquals(
             $this->createAddressResponse()->getBody()->getContents(),
-            $client->createAddress()->getBody()->getContents()
+            $client->createAddress()->toJson()
         );
     }
 
     public function testDeleteAddress()
     {
-        $client = new Walletd\Client([
+        $client = new TurtleService([
             'handler' => $this->mockHandler([
                 $this->emptyResultResponse()
             ])
@@ -122,13 +122,13 @@ class WalletdClientRequestTest extends TestCase
 
         $this->assertEquals(
             $this->emptyResultResponse()->getBody()->getContents(),
-            $client->deleteAddress(static::ADDRESS)->getBody()->getContents()
+            $client->deleteAddress(static::ADDRESS)->toJson()
         );
     }
 
     public function testGetBalance()
     {
-        $client = new Walletd\Client([
+        $client = new TurtleService([
             'handler' => $this->mockHandler([
                 $this->getBalanceResponse()
             ])
@@ -136,13 +136,13 @@ class WalletdClientRequestTest extends TestCase
 
         $this->assertEquals(
             $this->getBalanceResponse()->getBody()->getContents(),
-            $client->getBalance(static::ADDRESS)->getBody()->getContents()
+            $client->getBalance(static::ADDRESS)->toJson()
         );
     }
 
     public function testGetBlockHashes()
     {
-        $client = new Walletd\Client([
+        $client = new TurtleService([
             'handler' => $this->mockHandler([
                 $this->getBlockHashesResponse()
             ])
@@ -150,7 +150,7 @@ class WalletdClientRequestTest extends TestCase
 
         $this->assertEquals(
             $this->getBlockHashesResponse()->getBody()->getContents(),
-            $client->getBlockHashes(20, 3)->getBody()->getContents()
+            $client->getBlockHashes(20, 3)->toJson()
         );
     }
 
