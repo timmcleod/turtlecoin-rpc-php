@@ -1,4 +1,5 @@
 <?php
+
 namespace TurtleCoin\Http;
 
 use Psr\Http\Message\ResponseInterface;
@@ -20,10 +21,9 @@ class JsonResponse implements Jsonable, Arrayable
     }
 
     /**
-     * @param int $options
      * @return string
      */
-    public function toJson($options = 0):string
+    public function toJson():string
     {
         return $this->response->getBody()->getContents();
     }

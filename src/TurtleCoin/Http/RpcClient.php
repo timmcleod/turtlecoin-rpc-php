@@ -19,10 +19,13 @@ class RpcClient
     protected $rpcHost = 'http://127.0.0.1';
 
     /** @var int */
-    protected $rpcPort = 8070;
+    protected $rpcPort = 80;
 
     /** @var string */
-    protected $rpcPassword = 'test';
+    protected $rpcBaseRoute = '';
+
+    /** @var string */
+    protected $rpcPassword = '';
 
     /**
      * @param array $config Configuration options
@@ -38,13 +41,14 @@ class RpcClient
      * Applies configuration options.
      *
      * @param array $config Configuration options:
-     *                      rpcHost: The hostname of the daemon (must include http://)
-     *                      rpcPort: The port number the daemon is listening on
+     *                      rpcHost: The hostname of the service (must include http://)
+     *                      rpcPort: The port number the service is listening on
      *                      rpcPassword: The password for JSON-RPC interface
+     *                      rpcBaseRoute: The base path for accessing the service
      */
     public function configure(array $config = []):void
     {
-        $config = array_intersect_key($config, array_flip(['rpcHost', 'rpcPort', 'rpcPassword']));
+        $config = array_intersect_key($config, array_flip(['rpcHost', 'rpcPort', 'rpcPassword', 'rpcBaseRoute']));
 
         foreach ($config as $key => $value)
         {
@@ -60,9 +64,10 @@ class RpcClient
     public function config():array
     {
         return [
-            'rpcHost'     => $this->rpcHost,
-            'rpcPort'     => $this->rpcPort,
-            'rpcPassword' => $this->rpcPassword,
+            'rpcHost'      => $this->rpcHost,
+            'rpcPort'      => $this->rpcPort,
+            'rpcPassword'  => $this->rpcPassword,
+            'rpcBaseRoute' => $this->rpcBaseRoute,
         ];
     }
 
@@ -105,7 +110,7 @@ class RpcClient
      */
     public function uri():string
     {
-        return "$this->rpcHost:$this->rpcPort/json_rpc";
+        return "$this->rpcHost:$this->rpcPort$this->rpcBaseRoute";
     }
 
     /**

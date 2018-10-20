@@ -8,53 +8,58 @@ class ConfigureTurtleServiceTest extends TestCase
 {
     public function testConfigureDefaultValues()
     {
-        $walletd = new TurtleService();
-        $walletd->configure([]);
+        $turtleService = new TurtleService();
+        $turtleService->configure([]);
         $this->assertEquals([
-            'rpcHost'     => 'http://127.0.0.1',
-            'rpcPort'     => 8070,
-            'rpcPassword' => 'test',
-        ], $walletd->config());
+            'rpcHost'      => 'http://127.0.0.1',
+            'rpcPort'      => 8070,
+            'rpcPassword'  => 'test',
+            'rpcBaseRoute' => '/json_rpc',
+        ], $turtleService->config());
     }
 
     public function testConfigureAllValues()
     {
-        $walletd = new TurtleService();
-        $walletd->configure([
-            'rpcHost'     => 'https://192.168.10.10',
-            'rpcPort'     => 8080,
-            'rpcPassword' => 'testing',
+        $turtleService = new TurtleService();
+        $turtleService->configure([
+            'rpcHost'      => 'https://192.168.10.10',
+            'rpcPort'      => 8080,
+            'rpcPassword'  => 'testing',
+            'rpcBaseRoute' => '/api/v1',
         ]);
 
         $this->assertEquals([
-            'rpcHost'     => 'https://192.168.10.10',
-            'rpcPort'     => 8080,
-            'rpcPassword' => 'testing',
-        ], $walletd->config());
+            'rpcHost'      => 'https://192.168.10.10',
+            'rpcPort'      => 8080,
+            'rpcPassword'  => 'testing',
+            'rpcBaseRoute' => '/api/v1',
+        ], $turtleService->config());
     }
 
     public function testConfigureViaConstructor()
     {
-        $walletd = new TurtleService([
-            'rpcHost'     => 'https://192.168.10.10',
-            'rpcPort'     => 8080,
-            'rpcPassword' => 'testing',
+        $turtleService = new TurtleService([
+            'rpcHost'      => 'https://192.168.10.10',
+            'rpcPort'      => 8080,
+            'rpcPassword'  => 'testing',
+            'rpcBaseRoute' => '/api/v1',
         ]);
 
         $this->assertEquals([
-            'rpcHost'     => 'https://192.168.10.10',
-            'rpcPort'     => 8080,
-            'rpcPassword' => 'testing',
-        ], $walletd->config());
+            'rpcHost'      => 'https://192.168.10.10',
+            'rpcPort'      => 8080,
+            'rpcPassword'  => 'testing',
+            'rpcBaseRoute' => '/api/v1',
+        ], $turtleService->config());
     }
 
     public function testConfigureDoesntOverwriteOtherVariables()
     {
-        $walletd = new TurtleService();
-        $walletd->configure([
+        $turtleService = new TurtleService();
+        $turtleService->configure([
             'client' => 'should not be able to set this value',
         ]);
 
-        $this->assertNotEquals($walletd->client(), 'should not be able to set this value');
+        $this->assertNotEquals($turtleService->client(), 'should not be able to set this value');
     }
 }

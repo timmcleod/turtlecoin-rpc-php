@@ -15,6 +15,12 @@ class TurtleService extends RpcClient
     /** @var int */
     protected $rpcPort = 8070;
 
+    /** @var string */
+    protected $rpcPassword = 'test';
+
+    /** @var string */
+    protected $rpcBaseRoute = '/json_rpc';
+
     /**
      * Re-syncs the wallet.
      *

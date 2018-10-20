@@ -1,6 +1,6 @@
 {
-  "name": "turtlecoin/turtlecoin-walletd-rpc-php",
-  "description": "A PHP wrapper for the TurtleCoin walletd daemon RPC interface",
+  "name": "turtlecoin/turtlecoin-rpc-php",
+  "description": "A PHP wrapper for TurtleCoin's RPC interfaces",
   "keywords": [
     "TurtleCoin",
     "PHP"
