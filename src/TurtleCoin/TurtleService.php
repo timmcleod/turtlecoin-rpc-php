@@ -38,7 +38,7 @@ class TurtleService extends RpcClient
 
         if (!is_null($viewSecretKey)) $params['viewSecretKey'] = $viewSecretKey;
 
-        return $this->request('reset', $params);
+        return $this->rpcPost('reset', $params);
     }
 
     /**
@@ -48,7 +48,7 @@ class TurtleService extends RpcClient
      */
     public function save():JsonResponse
     {
-        return $this->request('save', []);
+        return $this->rpcPost('save', []);
     }
 
     /**
@@ -58,7 +58,7 @@ class TurtleService extends RpcClient
      */
     public function getViewKey():JsonResponse
     {
-        return $this->request('getViewKey', []);
+        return $this->rpcPost('getViewKey', []);
     }
 
     /**
@@ -73,7 +73,7 @@ class TurtleService extends RpcClient
             'address' => $address,
         ];
 
-        return $this->request('getSpendKeys', $params);
+        return $this->rpcPost('getSpendKeys', $params);
     }
 
     /**
@@ -84,7 +84,7 @@ class TurtleService extends RpcClient
      */
     public function getStatus():JsonResponse
     {
-        return $this->request('getStatus', []);
+        return $this->rpcPost('getStatus', []);
     }
 
     /**
@@ -94,7 +94,7 @@ class TurtleService extends RpcClient
      */
     public function getAddresses():JsonResponse
     {
-        return $this->request('getAddresses', []);
+        return $this->rpcPost('getAddresses', []);
     }
 
     /**
@@ -113,7 +113,7 @@ class TurtleService extends RpcClient
         if (!is_null($secretSpendKey)) $params['secretSpendKey'] = $secretSpendKey;
         if (!is_null($publicSpendKey)) $params['publicSpendKey'] = $publicSpendKey;
 
-        return $this->request('createAddress', $params);
+        return $this->rpcPost('createAddress', $params);
     }
 
     /**
@@ -128,7 +128,7 @@ class TurtleService extends RpcClient
             'address' => $address,
         ];
 
-        return $this->request('deleteAddress', $params);
+        return $this->rpcPost('deleteAddress', $params);
     }
 
     /**
@@ -143,7 +143,7 @@ class TurtleService extends RpcClient
 
         if (!is_null($address)) $params['address'] = $address;
 
-        return $this->request('getBalance', $params);
+        return $this->rpcPost('getBalance', $params);
     }
 
     /**
@@ -160,7 +160,7 @@ class TurtleService extends RpcClient
             'blockCount'      => $blockCount,
         ];
 
-        return $this->request('getBlockHashes', $params);
+        return $this->rpcPost('getBlockHashes', $params);
     }
 
     /**
@@ -190,7 +190,7 @@ class TurtleService extends RpcClient
         if (!is_null($addresses)) $params['addresses'] = $addresses;
         if (!is_null($paymentId)) $params['paymentId'] = $paymentId;
 
-        return $this->request('getTransactionHashes', $params);
+        return $this->rpcPost('getTransactionHashes', $params);
     }
 
     /**
@@ -220,7 +220,7 @@ class TurtleService extends RpcClient
         if (!is_null($addresses)) $params['addresses'] = $addresses;
         if (!is_null($paymentId)) $params['paymentId'] = $paymentId;
 
-        return $this->request('getTransactions', $params);
+        return $this->rpcPost('getTransactions', $params);
     }
 
     /**
@@ -237,7 +237,7 @@ class TurtleService extends RpcClient
 
         if (!is_null($addresses)) $params['addresses'] = $addresses;
 
-        return $this->request('getUnconfirmedTransactionHashes', $params);
+        return $this->rpcPost('getUnconfirmedTransactionHashes', $params);
     }
 
     /**
@@ -253,7 +253,7 @@ class TurtleService extends RpcClient
             'transactionHash' => $transactionHash,
         ];
 
-        return $this->request('getTransaction', $params);
+        return $this->rpcPost('getTransaction', $params);
     }
 
     /**
@@ -300,7 +300,7 @@ class TurtleService extends RpcClient
         if (!is_null($paymentId)) $params['paymentId'] = $paymentId;
         if (!is_null($changeAddress)) $params['changeAddress'] = $changeAddress;
 
-        return $this->request('sendTransaction', $params);
+        return $this->rpcPost('sendTransaction', $params);
     }
 
     /**
@@ -347,7 +347,7 @@ class TurtleService extends RpcClient
         if (!is_null($paymentId)) $params['paymentId'] = $paymentId;
         if (!is_null($changeAddress)) $params['changeAddress'] = $changeAddress;
 
-        return $this->request('createDelayedTransaction', $params);
+        return $this->rpcPost('createDelayedTransaction', $params);
     }
 
     /**
@@ -357,7 +357,7 @@ class TurtleService extends RpcClient
      */
     public function getDelayedTransactionHashes():JsonResponse
     {
-        return $this->request('getDelayedTransactionHashes', []);
+        return $this->rpcPost('getDelayedTransactionHashes', []);
     }
 
     /**
@@ -372,7 +372,7 @@ class TurtleService extends RpcClient
             'transactionHash' => $transactionHash,
         ];
 
-        return $this->request('deleteDelayedTransaction', $params);
+        return $this->rpcPost('deleteDelayedTransaction', $params);
     }
 
     /**
@@ -387,7 +387,7 @@ class TurtleService extends RpcClient
             'transactionHash' => $transactionHash,
         ];
 
-        return $this->request('sendDelayedTransaction', $params);
+        return $this->rpcPost('sendDelayedTransaction', $params);
     }
 
     /**
@@ -424,7 +424,7 @@ class TurtleService extends RpcClient
         if (!is_null($addresses)) $params['addresses'] = $addresses;
         if (!is_null($destinationAddress)) $params['destinationAddress'] = $destinationAddress;
 
-        return $this->request('sendFusionTransaction', $params);
+        return $this->rpcPost('sendFusionTransaction', $params);
     }
 
     /**
@@ -445,7 +445,7 @@ class TurtleService extends RpcClient
 
         if (!is_null($addresses)) $params['addresses'] = $addresses;
 
-        return $this->request('sendFusionTransaction', $params);
+        return $this->rpcPost('sendFusionTransaction', $params);
     }
 
     /**
@@ -462,7 +462,7 @@ class TurtleService extends RpcClient
             'address' => $address,
         ];
 
-        return $this->request('getMnemonicSeed', $params);
+        return $this->rpcPost('getMnemonicSeed', $params);
     }
 
     /**
@@ -480,7 +480,7 @@ class TurtleService extends RpcClient
             'paymentId' => $paymentId,
         ];
 
-        return $this->request('createIntegratedAddress', $params);
+        return $this->rpcPost('createIntegratedAddress', $params);
     }
 
     /**
@@ -493,6 +493,6 @@ class TurtleService extends RpcClient
      */
     public function getFeeInfo():JsonResponse
     {
-        return $this->request('getFeeInfo', []);
+        return $this->rpcPost('getFeeInfo', []);
     }
 }

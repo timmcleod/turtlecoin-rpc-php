@@ -76,7 +76,7 @@ class RpcClient
      * @param array  $params
      * @return JsonResponse
      */
-    public function request(string $method, array $params = []):JsonResponse
+    public function rpcPost(string $method, array $params = []):JsonResponse
     {
         $options = [
             'jsonrpc' => '2.0',
@@ -87,7 +87,20 @@ class RpcClient
 
         if (!empty($this->rpcPassword)) $options['password'] = $this->rpcPassword;
 
-        $response = $this->client->post($this->uri(), [RequestOptions::JSON => $options]);
+        $response = $this->client->post($this->rpcPostUri(), [RequestOptions::JSON => $options]);
+
+        $this->rpcId++;
+
+        return JsonResponse::make($response);
+    }
+
+    /**
+     * @param string $method
+     * @return JsonResponse
+     */
+    public function rpcGet(string $method):JsonResponse
+    {
+        $response = $this->client->get($this->rpcGetUri($method));
 
         $this->rpcId++;
 
@@ -108,9 +121,21 @@ class RpcClient
      *
      * @return string
      */
-    public function uri():string
+    public function rpcPostUri():string
     {
-        return "$this->rpcHost:$this->rpcPort$this->rpcBaseRoute";
+        $route = trim($this->rpcBaseRoute, "/");
+        return "$this->rpcHost:$this->rpcPort/$route";
+    }
+
+    /**
+     * Returns the endpoint URI.
+     *
+     * @param string $method
+     * @return string
+     */
+    public function rpcGetUri(string $method):string
+    {
+        return "$this->rpcHost:$this->rpcPort/$method";
     }
 
     /**
