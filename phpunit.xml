@@ -10,7 +10,7 @@
          stopOnFailure="false"
          verbose="true">
     <testsuites>
-        <testsuite name="TurtleCoin Walletd API Test Suite">
+        <testsuite name="TurtleCoin API Test Suite">
             <directory suffix="Test.php">tests</directory>
         </testsuite>
     </testsuites>
