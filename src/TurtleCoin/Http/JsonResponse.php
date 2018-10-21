@@ -21,6 +21,8 @@ class JsonResponse implements Jsonable, Arrayable
     }
 
     /**
+     * Returns the body contents of the response.
+     *
      * @return string
      */
     public function toJson():string
@@ -29,6 +31,8 @@ class JsonResponse implements Jsonable, Arrayable
     }
 
     /**
+     * Returns array representation of the body contents of the response.
+     *
      * @return array
      */
     public function toArray():array
@@ -37,6 +41,21 @@ class JsonResponse implements Jsonable, Arrayable
     }
 
     /**
+     * Returns the result field from the RPC response. If the result field
+     * doesn't exist, it will return the full result as an array.
+     *
+     * @return mixed
+     */
+    public function result()
+    {
+        $result = $this->toArray();
+
+        return $result['result'] ?? $result;
+    }
+
+    /**
+     * Returns underlying response.
+     *
      * @return ResponseInterface
      */
     public function response():ResponseInterface
@@ -45,11 +64,24 @@ class JsonResponse implements Jsonable, Arrayable
     }
 
     /**
-     * @param ResponseInterface $response
-     * @return JsonResponse
+     * Dynamically proxy method calls to the underlying response.
+     *
+     * @param string $method
+     * @param array  $parameters
+     * @return mixed
      */
-    public static function make(ResponseInterface $response):JsonResponse
+    public function __call($method, $parameters)
     {
-        return new static($response);
+        return $this->response->{$method}(...$parameters);
+    }
+
+    /**
+     * Returns the body contents of the response.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->toJson();
     }
 }

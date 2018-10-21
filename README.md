@@ -31,8 +31,7 @@ $config = [
 ];
 
 $turtlecoind = new TurtleCoind($config);
-$response = $turtlecoind->getBlockCount();
-echo $response->toJson();
+echo $turtlecoind->getBlockCount();
 
 > {"id":2,"jsonrpc":"2.0","result":{"count":784547,"status":"OK"}}
 ``` 
@@ -47,10 +46,33 @@ $config = [
 ];
 
 $turtleService = new TurtleService($config);
-$response = $turtleService->getBalance($walletAddress);
-echo $response->toJson();
+echo $turtleService->getBalance($walletAddress);
 
 > {"id":0,"jsonrpc":"2.0","result":["availableBalance":100,"lockedAmount":50]}
+``` 
+
+Optionally, you may access details about the response:
+
+```php
+$response = $turtleService->getBalance($walletAddress);
+
+// The result field from the RPC response
+$response->result();
+
+// RPC response as JSON string
+$response->toJson();
+
+// RPC response as an array
+$response->toArray();
+
+// Or other response details
+$response->getStatusCode();
+$response->getProtocolVersion();
+$response->getHeaders();
+$response->hasHeader($header);
+$response->getHeader($header);
+$response->getHeaderLine($header);
+$response->getBody();
 ``` 
 
 ## Docs

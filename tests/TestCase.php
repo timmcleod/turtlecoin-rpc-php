@@ -14,6 +14,13 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     const SPEND_PUBLIC_KEY = '0000000000000000000000000000000000000000000000000000000000000000';
     const SPEND_SECRET_KEY = '0000000000000000000000000000000000000000000000000000000000000000';
     const BLOCK_HASH = 'f0fe2fbf5816107ab6fc783cd6931ea310d984b8f341410bab945542690a4518';
+    const BLOCK_COUNT = 249310;
+    const KNOWN_BLOCK_COUNT = 249320;
+    const HEIGHT = 249311;
+    const NETWORK_HEIGHT = 249321;
+    const PEER_COUNT = 8;
+    const AVAILABLE_BALANCE = 100;
+    const LOCKED_AMOUNT = 50;
 
     public function mockHandler($queue)
     {
@@ -37,7 +44,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             'id'      => 0,
             'jsonrpc' => '2.0',
             'result'  => [
-                'viewSecretKey' => static::VIEW_SECRET_KEY
+                'viewSecretKey' => static::VIEW_SECRET_KEY,
             ],
         ]);
 
@@ -64,10 +71,10 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             'id'      => 0,
             'jsonrpc' => '2.0',
             'result'  => [
-                'blockCount'      => 249310,
-                'knownBlockCount' => 249309,
-                'lastBlockHash'   => '6d3925d415ed91c870a63320581bd3dc50f43c0466877d4ad790e531f2925815',
-                'peerCount'       => 8,
+                'blockCount'      => static::BLOCK_COUNT,
+                'knownBlockCount' => static::KNOWN_BLOCK_COUNT,
+                'lastBlockHash'   => static::BLOCK_HASH,
+                'peerCount'       => static::PEER_COUNT,
             ],
         ]);
 
@@ -93,7 +100,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             'id'      => 0,
             'jsonrpc' => '2.0',
             'result'  => [
-                'address' => static::ADDRESS
+                'address' => static::ADDRESS,
             ],
         ]);
 
@@ -106,8 +113,8 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             'id'      => 0,
             'jsonrpc' => '2.0',
             'result'  => [
-                'availableBalance' => 100,
-                'lockedAmount'     => 50
+                'availableBalance' => static::AVAILABLE_BALANCE,
+                'lockedAmount'     => static::LOCKED_AMOUNT,
             ],
         ]);
 
@@ -124,7 +131,36 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
                     static::BLOCK_HASH,
                     static::BLOCK_HASH,
                     static::BLOCK_HASH,
-                ]
+                ],
+            ],
+        ]);
+
+        return new Response(200, [], $json);
+    }
+
+    public function getBlockCountResponse()
+    {
+        $json = json_encode([
+            'id'      => 0,
+            'jsonrpc' => '2.0',
+            'result'  => [
+                'count'  => static::BLOCK_COUNT,
+                'status' => 'OK',
+            ],
+        ]);
+
+        return new Response(200, [], $json);
+    }
+
+    public function getHeightResponse()
+    {
+        $json = json_encode([
+            'id'      => 0,
+            'jsonrpc' => '2.0',
+            'result'  => [
+                'height'         => static::HEIGHT,
+                'network_height' => static::NETWORK_HEIGHT,
+                'status'         => 'OK',
             ],
         ]);
 

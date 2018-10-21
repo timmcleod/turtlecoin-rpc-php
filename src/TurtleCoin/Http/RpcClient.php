@@ -91,7 +91,7 @@ class RpcClient
 
         $this->rpcId++;
 
-        return JsonResponse::make($response);
+        return new JsonResponse($response);
     }
 
     /**
@@ -104,7 +104,7 @@ class RpcClient
 
         $this->rpcId++;
 
-        return JsonResponse::make($response);
+        return new JsonResponse($response);
     }
 
     /**
