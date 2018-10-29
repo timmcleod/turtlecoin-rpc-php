@@ -3,6 +3,8 @@
 
 TurtleCoin RPC PHP is a PHP wrapper for the TurtleCoin JSON-RPC interfaces.
 
+Requires TurtleCoin v0.8.4+
+
 ---
 
 1) [Install TurtleCoin RPC PHP](#install-turtlecoin-rpc-php)

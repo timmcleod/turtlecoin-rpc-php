@@ -24,19 +24,14 @@ class TurtleService extends RpcClient
     /**
      * Re-syncs the wallet.
      *
-     * If the $viewSecretKey parameter is not specified, the reset() method resets the wallet and
-     * re-syncs it. If the $viewSecretKey argument is specified, reset() method substitutes
-     * the existing wallet with a new one with a specified $viewSecretKey and creates an
-     * address for it.
-     *
-     * @param string|null $viewSecretKey Private view key. Optional.
+     * @param int|null $scanHeight The scan height to start scanning for transactions. Optional.
      * @return JsonResponse
      */
-    public function reset(string $viewSecretKey = null):JsonResponse
+    public function reset(int $scanHeight = null):JsonResponse
     {
         $params = [];
 
-        if (!is_null($viewSecretKey)) $params['viewSecretKey'] = $viewSecretKey;
+        if (!is_null($scanHeight)) $params['scanHeight'] = $scanHeight;
 
         return $this->rpcPost('reset', $params);
     }

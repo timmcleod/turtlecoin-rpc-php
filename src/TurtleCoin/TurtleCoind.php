@@ -182,7 +182,7 @@ class TurtleCoind extends RpcClient
      */
     public function getHeight():JsonResponse
     {
-        return $this->rpcGet('getheight');
+        return $this->rpcGet('height');
     }
 
     /**
@@ -192,7 +192,7 @@ class TurtleCoind extends RpcClient
      */
     public function getInfo():JsonResponse
     {
-        return $this->rpcGet('getinfo');
+        return $this->rpcGet('info');
     }
 
     /**
@@ -212,7 +212,7 @@ class TurtleCoind extends RpcClient
      */
     public function getPeers():JsonResponse
     {
-        return $this->rpcGet('getpeers');
+        return $this->rpcGet('peers');
     }
 
     /**
@@ -222,6 +222,6 @@ class TurtleCoind extends RpcClient
      */
     public function getFeeInfo():JsonResponse
     {
-        return $this->rpcGet('feeinfo');
+        return $this->rpcGet('fee');
     }
 }
